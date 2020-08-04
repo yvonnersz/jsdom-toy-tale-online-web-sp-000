@@ -46,6 +46,12 @@ function renderToys(json) {
     toyCard.appendChild(button)
 
     document.querySelector('#toy-collection').appendChild(toyCard)
+
+    button.addEventListener('click', function(e) {
+      toy.likes++
+      p.innerText = `${toy.likes}`
+      like(toy.id, toy.likes)
+    })
   }
 }
 
@@ -75,7 +81,7 @@ document.addEventListener('submit', function(e) {
       .then(resp => resp.json())
       .then(json => renderPostFetch(json));
 
-      returnfunction renderPostFetch(json) {
+      function renderPostFetch(json) {
         let toyCard = document.createElement('div')
         toyCard.className = "card";
       
@@ -96,5 +102,26 @@ document.addEventListener('submit', function(e) {
         button.className = "like-btn"
         button.innerHTML = "Like <3"
         toyCard.appendChild(button)
+
+        button.addEventListener('click', function(e) {
+          toy.likes++
+          p.innerText = `${toy.likes}`
+          like(toy.id, toy.likes)
+        })
       }
 });
+
+
+function like(id, likes) {    
+
+    fetch(`http://localhost:3000/toys/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type":"application/json",
+        "Accept":"application/json"
+      },
+      body: JSON.stringify({
+        "likes": likes
+      })
+  });
+}
